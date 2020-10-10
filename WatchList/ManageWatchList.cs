@@ -61,6 +61,7 @@ namespace WatchList
 			{
 				Console.WriteLine("l ...登録済みの監視プロセスを全て表示");
 				Console.WriteLine("a ...監視するプロセスを実行中プロセスから追加");
+				Console.WriteLine("r ...プロセスをリストから削除。");
 				var key = Console.ReadKey();
 				Console.WriteLine();
 
@@ -73,6 +74,9 @@ namespace WatchList
 							break;
 						case 'a':
 							Add();
+							break;
+						case 'r':
+							Remove();
 							break;
 						default:
 							Console.WriteLine("不正な入力です。");
@@ -166,6 +170,15 @@ namespace WatchList
 			}
 
 			return currentProcesses.OrderBy(p => p.ProcessName);
+		}
+
+		private void Remove()
+		{
+			Console.WriteLine("プロセス名を入力。");
+			string name = Console.ReadLine();
+			Console.WriteLine();
+
+			processList = processList.Except(processList.Where(p => p.ProcessName == name)).ToList();
 		}
 
 		private void RoadAll()
