@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AppRecoder.Model;
 
 namespace AppRecoder
 {
 	public class ProcessWatch
 	{
-		private readonly Dictionary<string, string> currentProcess = new Dictionary<string, string>();
+		private readonly List<ProcessModel> currentProcess = new List<ProcessModel>();
 
 		/// <summary>
 		/// 実行中の全てのプロセスを取得します。
@@ -48,7 +49,12 @@ namespace AppRecoder
 				{
 					try
 					{
-						currentProcess.Add(process.ProcessName, process.MainModule.FileName);
+						var tmp = new ProcessModel
+						{
+							ProcessName = process.ProcessName,
+							ProcessPath = process.MainModule.FileName,
+						};
+						currentProcess.Add(tmp);
 					}
 					catch
 					{ }
