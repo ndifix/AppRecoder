@@ -30,12 +30,12 @@ namespace AppRecoder
 
 				try
 				{
-					if(watchProcessTask != null)
+					if (watchProcessTask != null)
 					{
 						watchProcessTask.Wait();
 					}
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Console.WriteLine($"サービスの停止に失敗。{ex.Message}");
 				}

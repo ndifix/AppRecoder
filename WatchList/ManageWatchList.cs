@@ -85,7 +85,7 @@ namespace WatchList
 
 					SaveAll();
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Console.WriteLine(ex.Message);
 				}
@@ -107,7 +107,7 @@ namespace WatchList
 
 		private void ViewAll()
 		{
-			foreach(var process in processList)
+			foreach (var process in processList)
 			{
 				Console.WriteLine(process.ProcessName);
 			}
@@ -116,7 +116,7 @@ namespace WatchList
 		private void Add()
 		{
 			var currentProcesses = GetCurrentProcess();
-			foreach(var process in currentProcesses)
+			foreach (var process in currentProcesses)
 			{
 				Console.WriteLine(process.ProcessName);
 			}
@@ -125,7 +125,7 @@ namespace WatchList
 			string name = Console.ReadLine();
 			Console.WriteLine();
 
-			if(currentProcesses.Count(p=>p.ProcessName==name) == 0)
+			if (currentProcesses.Count(p => p.ProcessName == name) == 0)
 			{
 				throw new Exception($"不正な入力。{name}");
 			}
