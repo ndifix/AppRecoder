@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using AppRecoder.Model;
+using System.Diagnostics;
+using System.Linq;
 
 namespace WatchList
 {
@@ -47,7 +49,6 @@ namespace WatchList
 
 		public void OnStop()
 		{
-			SaveAll();
 			cts.Cancel();
 			Console.WriteLine("プログラムの終了。");
 		}
@@ -59,17 +60,30 @@ namespace WatchList
 			while (!cancellationToken.IsCancellationRequested)
 			{
 				Console.WriteLine("l ...登録済みの監視プロセスを全て表示");
+				Console.WriteLine("a ...監視するプロセスを実行中プロセスから追加");
 				var key = Console.ReadKey();
 				Console.WriteLine();
 
-				switch (key.KeyChar)
+				try
 				{
-					case 'l':
-						ViewAll();
-						break;
-					default:
-						Console.WriteLine("不正な入力です。");
-						break;
+					switch (key.KeyChar)
+					{
+						case 'l':
+							ViewAll();
+							break;
+						case 'a':
+							Add();
+							break;
+						default:
+							Console.WriteLine("不正な入力です。");
+							break;
+					}
+
+					SaveAll();
+				}
+				catch(Exception ex)
+				{
+					Console.WriteLine(ex.Message);
 				}
 
 				try
@@ -93,6 +107,65 @@ namespace WatchList
 			{
 				Console.WriteLine(process.ProcessName);
 			}
+		}
+
+		private void Add()
+		{
+			var currentProcesses = GetCurrentProcess();
+			foreach(var process in currentProcesses)
+			{
+				Console.WriteLine(process.ProcessName);
+			}
+			Console.WriteLine("プロセス名を入力。");
+
+			string name = Console.ReadLine();
+			Console.WriteLine();
+
+			if(currentProcesses.Count(p=>p.ProcessName==name) == 0)
+			{
+				throw new Exception($"不正な入力。{name}");
+			}
+
+			ProcessModel addProcess = currentProcesses.Where(p => p.ProcessName == name).ToArray()[0];
+			if (processList.Count(p => p == addProcess) == 0)
+			{
+				processList.Add(addProcess);
+			}
+		}
+
+		private IEnumerable<ProcessModel> GetCurrentProcess()
+		{
+			Process[] processes = null;
+			try
+			{
+				processes = Process.GetProcesses();
+			}
+			catch
+			{
+				return new List<ProcessModel>();
+			}
+
+			List<ProcessModel> currentProcesses = new List<ProcessModel>();
+			foreach (var process in processes)
+			{
+				try
+				{
+					var tmp = new ProcessModel
+					{
+						ProcessName = process.ProcessName,
+						ProcessPath = process.MainModule.FileName,
+					};
+
+					if (currentProcesses.Count(p => p.ProcessName == tmp.ProcessName) == 0)
+					{
+						currentProcesses.Add(tmp);
+					}
+				}
+				catch
+				{ }
+			}
+
+			return currentProcesses.OrderBy(p => p.ProcessName);
 		}
 
 		private void RoadAll()
