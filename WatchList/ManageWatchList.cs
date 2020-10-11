@@ -66,6 +66,7 @@ namespace WatchList
 				Console.WriteLine("all ...登録済みの監視プロセスを全て表示");
 				Console.WriteLine("add ...監視するプロセスを実行中プロセスから追加");
 				Console.WriteLine("rm ...プロセスをリストから削除。");
+				Console.WriteLine("iall...無視するプロセス一覧を表示");
 				Console.WriteLine("iadd ...プロセスを無視するリストに追加");
 				Console.WriteLine("irm ...無視するリストから除外");
 				var key = Console.ReadLine();
@@ -83,6 +84,9 @@ namespace WatchList
 							break;
 						case "rm":
 							Remove();
+							break;
+						case "iall":
+							ViewAllIgnore();
 							break;
 						case "iadd":
 							AddIgnore();
@@ -122,6 +126,14 @@ namespace WatchList
 			foreach (var process in processList)
 			{
 				Console.WriteLine(process.ProcessName);
+			}
+		}
+
+		private void ViewAllIgnore()
+		{
+			foreach(var name in ignoreProcesses)
+			{
+				Console.WriteLine(name);
 			}
 		}
 
