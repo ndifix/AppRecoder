@@ -17,15 +17,7 @@ namespace AppRecoder
 
 		private readonly List<string> currentProcess = new List<string>();
 
-		private readonly List<ProcessModel> watchList = new List<ProcessModel>();
-
-		public ProcessWatch()
-		{
-			string listText;
-
-			listText = File.ReadAllText(fullPath);
-			watchList = JsonConvert.DeserializeObject<List<ProcessModel>>(listText);
-		}
+		private List<ProcessModel> watchList = new List<ProcessModel>();
 
 		/// <summary>
 		/// 実行中の全てのプロセスを取得します。
@@ -93,6 +85,7 @@ namespace AppRecoder
 
 		private void RecordProcessImpl()
 		{
+			RoadAll();
 
 			foreach (ProcessModel process in watchList)
 			{
@@ -104,6 +97,19 @@ namespace AppRecoder
 					}
 				}
 			}
+		}
+
+		private void RoadAll()
+		{
+			string listText;
+
+			try
+			{
+				listText = File.ReadAllText(fullPath);
+				watchList = JsonConvert.DeserializeObject<List<ProcessModel>>(listText);
+			}
+			catch
+			{ }
 		}
 
 		private void SaveAll()
