@@ -10,7 +10,7 @@ namespace AppRecoder
 {
 	public class ProcessWatch
 	{
-		private readonly List<ProcessModel> currentProcess = new List<ProcessModel>();
+		private readonly List<string> currentProcess = new List<string>();
 
 		/// <summary>
 		/// 実行中の全てのプロセスを取得します。
@@ -49,12 +49,7 @@ namespace AppRecoder
 				{
 					try
 					{
-						var tmp = new ProcessModel
-						{
-							ProcessName = process.ProcessName,
-							ProcessPath = process.MainModule.FileName,
-						};
-						currentProcess.Add(tmp);
+						currentProcess.Add(process.ProcessName);
 					}
 					catch
 					{ }
