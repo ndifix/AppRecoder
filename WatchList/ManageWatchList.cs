@@ -63,35 +63,35 @@ namespace WatchList
 
 			while (!cancellationToken.IsCancellationRequested)
 			{
-				Console.WriteLine("l ...登録済みの監視プロセスを全て表示");
-				Console.WriteLine("a ...監視するプロセスを実行中プロセスから追加");
-				Console.WriteLine("r ...プロセスをリストから削除。");
-				Console.WriteLine("i ...プロセスを無視するリストに追加");
-				Console.WriteLine("I ...無視するリストから除外");
-				var key = Console.ReadKey();
+				Console.WriteLine("all ...登録済みの監視プロセスを全て表示");
+				Console.WriteLine("add ...監視するプロセスを実行中プロセスから追加");
+				Console.WriteLine("rm ...プロセスをリストから削除。");
+				Console.WriteLine("iadd ...プロセスを無視するリストに追加");
+				Console.WriteLine("irm ...無視するリストから除外");
+				var key = Console.ReadLine();
 				Console.WriteLine();
 
 				try
 				{
-					switch (key.KeyChar)
+					switch (key)
 					{
-						case 'l':
+						case "all":
 							ViewAll();
 							break;
-						case 'a':
+						case "add":
 							Add();
 							break;
-						case 'r':
+						case "rm":
 							Remove();
 							break;
-						case 'i':
+						case "iadd":
 							AddIgnore();
 							break;
-						case 'I':
+						case "irm":
 							RemoveIgnore();
 							break;
 						default:
-							Console.WriteLine("不正な入力です。");
+							Console.WriteLine($"不正な入力です。:{key}");
 							break;
 					}
 
