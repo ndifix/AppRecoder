@@ -20,6 +20,10 @@ namespace WatchList
 
 		private List<ProcessModel> processList = new List<ProcessModel>();
 
+		private readonly string ignorePath = @"../../../../IgnoreProcess.txt";
+
+		private List<string> ignoreProcesses = new List<string>();
+
 		public void OnStart()
 		{
 			Console.WriteLine("プログラムの起動");
@@ -62,6 +66,8 @@ namespace WatchList
 				Console.WriteLine("l ...登録済みの監視プロセスを全て表示");
 				Console.WriteLine("a ...監視するプロセスを実行中プロセスから追加");
 				Console.WriteLine("r ...プロセスをリストから削除。");
+				Console.WriteLine("i ...プロセスを無視するリストに追加");
+				Console.WriteLine("I ...無視するリストから除外");
 				var key = Console.ReadKey();
 				Console.WriteLine();
 
@@ -77,6 +83,12 @@ namespace WatchList
 							break;
 						case 'r':
 							Remove();
+							break;
+						case 'i':
+							AddIgnore();
+							break;
+						case 'I':
+							RemoveIgnore();
 							break;
 						default:
 							Console.WriteLine("不正な入力です。");
@@ -175,6 +187,11 @@ namespace WatchList
 				{ }
 			}
 
+			// 無視するリストのものを除外。
+			currentProcesses = currentProcesses
+					.Where(p => !ignoreProcesses.Contains(p.ProcessName))
+					.ToList();
+
 			return currentProcesses.OrderBy(p => p.ProcessName).ToList();
 		}
 
@@ -187,18 +204,67 @@ namespace WatchList
 			processList = processList.Except(processList.Where(p => p.ProcessName == name)).ToList();
 		}
 
+		private void AddIgnore()
+		{
+			var currentProcesses = GetCurrentProcess();
+
+			foreach (var process in currentProcesses.ToArray())
+			{
+				if (processList.Any(p => p.ProcessName == process.ProcessName))
+				{
+					currentProcesses.Remove(process);
+					continue;
+				}
+				Console.WriteLine(process.ProcessName);
+			}
+			Console.WriteLine("プロセス名を入力。");
+
+			string name = Console.ReadLine();
+			Console.WriteLine();
+
+			if (!currentProcesses.Any(p => p.ProcessName == name))
+			{
+				throw new Exception($"不正な入力。{name}");
+			}
+
+			ProcessModel addProcess = currentProcesses.Where(p => p.ProcessName == name).ToArray()[0];
+			if (!ignoreProcesses.Contains(addProcess.ProcessName))
+			{
+				ignoreProcesses.Add(addProcess.ProcessName);
+			}
+		}
+
+		private void RemoveIgnore()
+		{
+			foreach(var process in ignoreProcesses)
+			{
+				Console.WriteLine(process);
+			}
+			Console.WriteLine("プロセス名を入力。");
+			string name = Console.ReadLine();
+			Console.WriteLine();
+
+			ignoreProcesses.Remove(name);
+		}
+
 		private void RoadAll()
 		{
 			string listText;
 
 			listText = File.ReadAllText(fullPath);
 			processList = JsonConvert.DeserializeObject<List<ProcessModel>>(listText);
+
+			listText = File.ReadAllText(ignorePath);
+			ignoreProcesses = JsonConvert.DeserializeObject<List<string>>(listText);
 		}
 
 		private void SaveAll()
 		{
 			string listText = JsonConvert.SerializeObject(processList);
 			File.WriteAllText(fullPath, listText);
+
+			listText = JsonConvert.SerializeObject(ignoreProcesses);
+			File.WriteAllText(ignorePath, listText);
 		}
 	}
 }
