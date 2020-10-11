@@ -9,5 +9,7 @@ namespace AppRecoder.Model
 		public string ProcessName { get; set; }
 
 		public string ProcessPath { get; set; }
+
+		public int AccumulatedMinute { get; set; }
 	}
 }

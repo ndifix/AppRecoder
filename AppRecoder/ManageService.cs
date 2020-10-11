@@ -12,12 +12,15 @@ namespace AppRecoder
 
 		private Task watchProcessTask;
 
+		private Task recordTask;
+
 		public void StartService()
 		{
 			Console.WriteLine("サービスを開始します。");
 
 			var processWatch = new ProcessWatch();
 			watchProcessTask = processWatch.WatchProcessAync(cts.Token);
+			recordTask = processWatch.RecordProcess(cts.Token);
 		}
 
 		public void StopService()
@@ -33,6 +36,10 @@ namespace AppRecoder
 					if (watchProcessTask != null)
 					{
 						watchProcessTask.Wait();
+					}
+					if (recordTask != null)
+					{
+						recordTask.Wait();
 					}
 				}
 				catch (Exception ex)
