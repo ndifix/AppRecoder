@@ -116,8 +116,14 @@ namespace WatchList
 		private void Add()
 		{
 			var currentProcesses = GetCurrentProcess();
-			foreach (var process in currentProcesses)
+
+			foreach (var process in currentProcesses.ToArray())
 			{
+				if (processList.Any(p => p.ProcessName == process.ProcessName))
+				{
+					currentProcesses.Remove(process);
+					continue;
+				}
 				Console.WriteLine(process.ProcessName);
 			}
 			Console.WriteLine("プロセス名を入力。");
@@ -125,7 +131,7 @@ namespace WatchList
 			string name = Console.ReadLine();
 			Console.WriteLine();
 
-			if (currentProcesses.Count(p => p.ProcessName == name) == 0)
+			if (!currentProcesses.Any(p => p.ProcessName == name))
 			{
 				throw new Exception($"不正な入力。{name}");
 			}
@@ -137,7 +143,7 @@ namespace WatchList
 			}
 		}
 
-		private IEnumerable<ProcessModel> GetCurrentProcess()
+		private List<ProcessModel> GetCurrentProcess()
 		{
 			Process[] processes = null;
 			try
@@ -169,7 +175,7 @@ namespace WatchList
 				{ }
 			}
 
-			return currentProcesses.OrderBy(p => p.ProcessName);
+			return currentProcesses.OrderBy(p => p.ProcessName).ToList();
 		}
 
 		private void Remove()
