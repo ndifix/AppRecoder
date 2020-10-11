@@ -16,11 +16,11 @@ namespace WatchList
 	{
 		private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
-		private readonly string fullPath = @"../../../../processes.txt";
+		private readonly string fullPath = @"C:\Program Files\AppRecoder\processes.txt";
 
 		private List<ProcessModel> processList = new List<ProcessModel>();
 
-		private readonly string ignorePath = @"../../../../IgnoreProcess.txt";
+		private readonly string ignorePath = @"C:\Program Files\AppRecoder\IgnoreProcess.txt";
 
 		private List<string> ignoreProcesses = new List<string>();
 

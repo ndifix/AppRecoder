@@ -13,7 +13,7 @@ namespace AppRecoder
 {
 	public class ProcessWatch
 	{
-		private readonly string fullPath = @"../../../../processes.txt";
+		private readonly string fullPath = @"C:\Program Files\AppRecoder\processes.txt";
 
 		private readonly List<string> currentProcess = new List<string>();
 
