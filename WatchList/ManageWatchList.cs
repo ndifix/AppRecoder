@@ -14,7 +14,7 @@ namespace WatchList
 {
 	class ManageWatchList
 	{
-		private CancellationTokenSource cts = new CancellationTokenSource();
+		private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
 		private readonly string fullPath = @"../../../../processes.txt";
 
@@ -149,7 +149,7 @@ namespace WatchList
 			}
 
 			ProcessModel addProcess = currentProcesses.Where(p => p.ProcessName == name).ToArray()[0];
-			if (processList.Count(p => p == addProcess) == 0)
+			if (!processList.Any(p => p == addProcess))
 			{
 				processList.Add(addProcess);
 			}
@@ -201,7 +201,7 @@ namespace WatchList
 			string name = Console.ReadLine();
 			Console.WriteLine();
 
-			processList = processList.Except(processList.Where(p => p.ProcessName == name)).ToList();
+			processList = processList.Where(p => p.ProcessName != name).ToList();
 		}
 
 		private void AddIgnore()
